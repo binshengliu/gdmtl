@@ -1,0 +1,165 @@
+# @package _global_
+defaults:
+  - override hydra/job_logging: colorlog
+hydra:
+  run:
+    dir: ${oc.env:HOME}/sumrank/${now:%Y-%m-%d}-${now:%H-%M-%S}-bart-base-${desc}
+  job_logging:
+    root:
+      level: DEBUG
+    handlers:
+      console:
+        level: INFO
+      file:
+        level: DEBUG
+    loggers:
+      lightning:
+        handlers: []            # lightning will cause dups. remove.
+        level: DEBUG
+        propagate: True
+      transformers:
+        handlers: []
+        level: DEBUG
+        propagate: True
+
+data_dir: ${oc.env:HOME}/code/sum-ranker/data
+
+# Pytorch-lightning features
+amp_level: "O1"
+desc: stl
+distributed_backend: dp
+fast_dev_run: False
+gpus: -1
+load_checkpoint: null
+log_attentions: 10000
+log_embeddings: 0
+log_grad_histogram: 1000
+log_grad_interaction: 1000
+log_grad_norm: 100
+progress_bar_refresh_rate: 1
+reload_dataloaders_every_epoch: True
+resume_from_checkpoint: null
+seed: 1988
+weights_summary: "top"
+
+# General data configuration
+collection: ${data_dir}/datasets/msmarco/collection.tsv
+qa_prefix: "answer:"
+rank_prefix: "rank:"
+src_max_len: 256
+summarize_prefix: "sum:"
+tgt_max_len: 56
+
+# Train section
+balance: null
+check_val_every_n_epoch: 1
+mask_qgen_query: False
+mask_query_from_passage: 0.0
+mask_whole_word_prob: 0.0
+num_dup: 1
+num_sanity_val_steps: 2
+train_data: ${data_dir}/deepct/train.small.sqrt.k1=27-b=0.62.ans_run.labeled.npz
+train_data_workers: 4
+train_qgen_min_rel: 1
+train_pad_to_max_length: False
+train_percent_check: 1.0
+train_query: ${data_dir}/anserini/queries.train.tsv
+train_shuffle: False
+uncertainty_lr: 1e-2
+unlikelihood: 0.0
+
+# Valid section
+val_check_interval: 1.0
+val_percent_check: 1.0
+valid_data:
+  - ${data_dir}/deepct/dev.small.sqrt.k1=27-b=0.62.ans_run.labeled.npy
+  - ${data_dir}/dl2019/dl2019-test-small-k1=27-b=0.62.ans_run.labeled.npy
+valid_data_workers: 4
+valid_metrics: [["recip_rank_cut.10", "ndcg_cut.10", "map"], ["ndcg_cut.10", "recip_rank_cut.10", "map"]]
+valid_mode: ranker
+valid_options: ["", "-l 2"]
+valid_pad_to_max_length: False
+valid_qrels:
+  - ${data_dir}/datasets/msmarco/qrels.dev.small.tsv
+  - ${data_dir}/datasets/msmarco/2019qrels-pass.txt
+valid_query:
+  - ${data_dir}/anserini/queries.dev.small.tsv
+  - ${data_dir}/dl2019/msmarco-test2019-queries-small.tsv
+valid_sort: descending
+
+# Test/inference section
+eval_mode: null
+test_data:
+  - ${data_dir}/deepct/eval.small.sqrt.k1=27-b=0.62.ans_run.labeled.npy
+test_data_workers: 4
+test_metrics: [["recip_rank_cut.10", "ndcg_cut.10", "map"]]
+test_only: False
+test_options: [""]
+test_pad_to_max_length: False
+test_percent_check: 1.0
+test_qrels: []
+test_query:
+  - ${data_dir}/anserini/queries.eval.small.tsv
+test_sort: descending
+
+# Generation section. Maybe used in both valid and test phase.
+do_sample: False
+gen_max_len: 20
+gen_no_repeat_ngram_size: null  # This would make generation two times slower
+gen_num_beams: 5
+gen_num_return_sequences: 5
+gen_repetition_penalty: null
+gen_temperature: null
+gen_top_k: null
+gen_top_p: null
+min_uncertainty: null
+
+weigh_qgen: False
+
+cv_query: 'cast-2019-eval.tsv'
+cv_data: 'cast-2019-eval.ans_run'
+cv_folds: 5
+cv_metrics: ["ndcg_cut.10", "recip_rank_cut.10", "map"]
+cv_options: "-l 2"
+cv_qrels: 'cast-2019-qrels-marco.txt'
+cv_min_rel: 2
+cv_split_mode: session
+
+arch: facebook/bart-base
+revision: null
+gpu_mem: 126
+max_len: 256
+num_neg: 1
+val_num_neg: 10
+lr: 2e-5
+min_lr: 1e-6
+train_bsz: 32
+valid_bsz: 1024
+test_bsz: 1024
+accumulate_grad_batches: 1
+precision: 16
+
+weight_summarizer: 0.0
+weight_orig: 1.0
+weight_var: 0.0
+weight_disc: 0.0
+weight_rl: 0.0
+weight_qa: 0.0
+
+max_epochs: 10
+warmup_epochs: 1
+work_epochs: 0
+
+qa_train_path: null
+qa_valid_path: null
+qa_test_path: null
+
+model_config:
+  num_labels: 1
+  activation_dropout: 0.0
+  attention_dropout: 0.0
+  classif_dropout: 0.0
+  dropout: 0.1
+
+train_data_cls: MtlCatDataset
+eval_data_cls: RankPointDataset

@@ -1,0 +1,21 @@
+[tool.black]
+exclude = '''
+(
+  /(
+    mtl_rank/bleu
+  | mtl_rank/rouge
+  | mtl_rank/ms_marco_eval.py
+  | mtl_rank/plot_mtl.py
+  )
+)
+'''
+
+# https://github.com/psf/black#how-black-wraps-lines
+[tool.isort]
+multi_line_output=3
+include_trailing_comma=true
+force_grid_wrap=0
+use_parentheses=true
+line_length=88
+known_third_party=["ax", "irtools", "hydra", "numpy_indexed", "pytorch_lightning", "torch", "transformers", "omegaconf", "numpy", "pandas", "seaborn", "matplotlib", "spacy", "imgkit", "PIL", "torchvision", "rouge_score", "sacrebleu", "pdfkit", "pdfCropMargins"]
+skip_glob=["mtl_rank/rouge/*", "mtl_rank/bleu/*", "mtl_rank/ms_marco_eval.py"]

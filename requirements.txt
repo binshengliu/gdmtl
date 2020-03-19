@@ -1,0 +1,26 @@
+--use-feature=2020-resolver
+--find-links https://download.pytorch.org/whl/torch_stable.html
+git+https://github.com/binshengliu/irtools.git
+pdfkit==0.6.1
+matplotlib==3.3.0
+imgkit==1.0.2
+Unidecode==1.1.1
+transformers==3.4.0
+ftfy==5.7
+numpy==1.18.1
+tqdm==4.49.0
+pytorch_lightning==0.7.6
+numpy_indexed==0.3.5
+torch==1.4.0
+hydra_core==1.1.0
+more_itertools==8.4.0
+scipy==1.4.1
+omegaconf==2.1.0
+jsonlines==1.2.0
+spacy==2.3.1
+pandas==1.0.4
+hydra==2.5
+irtools==1.1.4.8
+pdfCropMargins==1.0.5
+pytest==6.2.4
+scikit_learn==0.24.2

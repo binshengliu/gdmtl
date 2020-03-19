@@ -1,0 +1,10 @@
+-r requirements.txt
+black
+flake8
+ipython
+isort<5
+mypy
+pre-commit
+pytest
+py-spy
+pdbpp

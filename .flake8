@@ -1,0 +1,4 @@
+[flake8]
+exclude = .git,mtl_rank/ms_marco_eval.py,mtl_rank/rouge/*,mtl_rank/bleu/*,mtl_rank/plot_*.py
+max-line-length = 88
+extend-ignore = E203
